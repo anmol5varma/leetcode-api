@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   locations.init({
-    location_id: DataTypes.INTEGER,
+    location_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
     name: DataTypes.STRING,
     start_time: DataTypes.TIME,
     end_time: DataTypes.TIME,
@@ -22,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'locations',
+    timestamps: false
   });
   return locations;
 };

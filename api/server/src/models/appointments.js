@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   appointments.init({
-    appointment_id: DataTypes.STRING,
+    appointment_id: {
+      type: DataTypes.STRING,
+      primaryKey: true
+    },
     location_id: DataTypes.INTEGER,
     appointment_time: DataTypes.DATE,
     no_of_people: DataTypes.INTEGER,
@@ -23,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'appointments',
+    timestamps: false
   });
   return appointments;
 };
