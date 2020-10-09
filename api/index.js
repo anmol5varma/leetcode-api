@@ -5,6 +5,9 @@ import cors from 'cors';
 import uuid from 'node-uuid';
 import config from 'dotenv';
 import locationRoutes from './server/routes/location.route';
+import appointmentRoutes from './server/routes/appointment.route';
+import { APPOINTMENT_URL, LOCATION_URL } from './constants/route'
+import { DEFAULT_PORT } from './constants/config'
 
 config.config();
 
@@ -26,10 +29,10 @@ app.use(morgan('tiny'))
 
 app.use(cors());
 
-const port = process.env.PORT || 8080;
-// when a random route is inputed
+const port = process.env.PORT || DEFAULT_PORT;
 
-app.use('/api/v1/location', locationRoutes);
+app.use(LOCATION_URL, locationRoutes);
+app.use(APPOINTMENT_URL, appointmentRoutes);
 
 app.get('/ping', (req, res) => res.status(200).send({
    message: 'pong'
