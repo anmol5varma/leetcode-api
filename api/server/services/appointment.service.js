@@ -1,5 +1,5 @@
 import randomize from 'randomatic';
-import database from '../src/models';
+import database from '../models';
 import queries from '../utils/query.util'
 
 const CODE_LENGTH = 8;
@@ -9,7 +9,7 @@ const generateUniqueId = async () => {
   let id;
   while (!isUnique) {
     id = `P-${randomize('A0', CODE_LENGTH)}`;
-    isUnique = await queries.isExists(database, 'appointments', 'appointment_id', id);
+    isUnique = !(await queries.isExists(database, 'appointments', 'appointment_id', id));
   }
   return id;
 }

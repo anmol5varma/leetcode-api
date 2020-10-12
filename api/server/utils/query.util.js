@@ -43,9 +43,9 @@ const appointments = (db, date) => {
 const isExists = (db, modelName, pk, id) => db[modelName].count({ where: { [pk]: id } })
     .then(count => {
         if (count != 0) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     });
 
 export default {

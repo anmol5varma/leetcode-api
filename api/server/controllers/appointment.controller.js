@@ -14,7 +14,6 @@ class AppointmentController {
       }
       return util.send(res);
     } catch (error) {
-      console.log(error);
       util.setError(400, error);
       return util.send(res);
     }

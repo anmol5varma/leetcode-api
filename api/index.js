@@ -6,7 +6,8 @@ import uuid from 'node-uuid';
 import config from 'dotenv';
 import locationRoutes from './server/routes/location.route';
 import appointmentRoutes from './server/routes/appointment.route';
-import { APPOINTMENT_URL, LOCATION_URL } from './constants/route'
+import testRoutes from './server/routes/tests.route';
+import { APPOINTMENT_URL, LOCATION_URL, TEST_RESULT_URL } from './constants/route'
 import { DEFAULT_PORT } from './constants/config'
 
 config.config();
@@ -33,6 +34,7 @@ const port = process.env.PORT || DEFAULT_PORT;
 
 app.use(LOCATION_URL, locationRoutes);
 app.use(APPOINTMENT_URL, appointmentRoutes);
+app.use(TEST_RESULT_URL, testRoutes);
 
 app.get('/ping', (req, res) => res.status(200).send({
    message: 'pong'
