@@ -35,6 +35,21 @@ class AppointmentController {
       return util.send(res);
     }
   }
+
+  static async getAppointmentDetails(req, res) {
+    if (!req.body.location_id || !req.body.appointment_id) {
+      util.setError(400, 'Please provide booking id and location id');
+      return util.send(res);
+    }
+    try {
+      const appointmentDetails = await AppointmentService.getAppointmentDetails(req.body);
+      util.setSuccess(200, 'valid', appointmentDetails);
+      return util.send(res);
+    } catch (error) {
+      util.setError(400, error.message);
+      return util.send(res);
+    }
+  }
 }
 
 export default AppointmentController;
