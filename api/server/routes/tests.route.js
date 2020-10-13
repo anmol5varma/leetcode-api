@@ -7,6 +7,6 @@ router.post('', TestResultsController.mapId);
 router.post('/generateids', TestResultsController.generateId);
 router.get('/tube/:tt_id/validate', TestResultsController.validateTubeId);
 router.get('/tube/:tt_id', TestResultsController.fetchResult);
-router.put('', TestResultsController.uploadResults);
+router.put('/strip/:ts_id', TestResultsController.uploadResults);
 
 export default router;

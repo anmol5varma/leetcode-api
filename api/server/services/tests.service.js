@@ -19,7 +19,7 @@ class AppointmentService {
         try {
             const testTube = await database.testtube.create({ tt_id: await generateUniqueId('T', 'testtube', 'tt_id') })
             const testStrip = await database.teststrip.create({ ts_id: await generateUniqueId('S', 'teststrip', 'ts_id') })
-            return ({ tt_id: testTube.tt_id, ts_id: testStrip.ts_id })
+            return ([{ tt_id: testTube.tt_id, ts_id: testStrip.ts_id }])
         } catch (error) {
             throw error;
         }
@@ -44,18 +44,12 @@ class AppointmentService {
 
     static async validateTubeId(tt_id) {
         try {
-            const isValidTubeId = await queries.isExists(database, 'testtube', 'tt_id', tt_id);
-            if (isValidTubeId) {
-                return isValidTubeId;
-            }
-            else
-                throw new Error('Invalid tube id');
+            return await queries.isExists(database, 'testtube', 'tt_id', tt_id) && !await queries.isExists(database, 'test_result', 'tt_id', tt_id);
 
         } catch (error) {
             throw error;
         }
     }
-
     static async fetchResult(tt_id) {
         try {
             return await database.test_result.findOne({ where: { tt_id } });

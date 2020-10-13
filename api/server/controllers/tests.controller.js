@@ -55,7 +55,10 @@ class TestResultsController {
         }
         try {
             const tubeDetail = await TestResultsService.fetchResult(tt_id);
-            util.setSuccess(200, 'Result retrieved', tubeDetail);
+            if (tubeDetail)
+                util.setSuccess(200, 'Result retrieved', tubeDetail);
+            else
+                util.setError(404, 'Not found');
             return util.send(res);
         } catch (error) {
             util.setError(400, error.message);
@@ -64,14 +67,18 @@ class TestResultsController {
     }
 
     static async uploadResults(req, res) {
-        const { is_positive, ts_id } = req.body;
-        if (!ts_id || !is_positive) {
+        const { is_positive } = req.body;
+        const { ts_id } = req.params;
+        if (!ts_id || is_positive == undefined) {
             util.setError(400, 'Please provide test strip id and test result');
             return util.send(res);
         }
         try {
             const testResult = await TestResultsService.uploadResults({ is_positive, ts_id });
-            util.setSuccess(200, 'Test Result updated', testResult);
+            if (testResult)
+                util.setSuccess(200, 'Test Result updated', testResult);
+            else
+                util.setError(404, 'Not found');
             return util.send(res);
         } catch (error) {
             util.setError(400, error.message);
