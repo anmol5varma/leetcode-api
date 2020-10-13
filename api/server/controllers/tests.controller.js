@@ -39,7 +39,7 @@ class TestResultsController {
         }
         try {
             const tubeDetails = await TestResultsService.validateTubeId(tt_id);
-            util.setSuccess(200, 'valid', tubeDetails);
+            util.setSuccess(200, tubeDetails ? 'valid' : 'invalid', tubeDetails);
             return util.send(res);
         } catch (error) {
             util.setError(400, error.message);
