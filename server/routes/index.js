@@ -1,5 +1,9 @@
-import user from './user.route'
+import user from './user.route';
+import section from './section.route';
+import entry from './entry.route';
 
 export default {
-    user
-}
+  user,
+  section,
+  entry
+};

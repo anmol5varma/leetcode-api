@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['airbnb-base', 'plugin:jest/recommended'],
+  extends: ['airbnb-base'],
   rules: {
     'no-console': 0,
     'no-param-reassign': [2, { props: false }],
@@ -13,7 +13,6 @@ module.exports = {
   env: {
     commonjs: true,
     node: true,
-    es6: true,
-    'jest/globals': true
+    es6: true
   },
 };

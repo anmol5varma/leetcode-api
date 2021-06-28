@@ -1,3 +1,3 @@
 const ROLES = ['basic', 'admin'];
 
-module.exports = ROLES
+module.exports = ROLES;

@@ -1,13 +1,15 @@
-'use strict';
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('sections', {
       id: {
-        allowNull: false,
-        primaryKey: true,
+        unique: true,
         autoIncrement: true,
         type: Sequelize.INTEGER
+      },
+      shortHand: {
+        type: Sequelize.STRING,
+        primaryKey: true,
+        allowNull: false
       },
       name: {
         type: Sequelize.STRING

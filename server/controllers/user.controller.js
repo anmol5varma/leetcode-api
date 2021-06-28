@@ -51,7 +51,7 @@ class UserController {
   }
 
   static async getRole(req, res) {
-      return res.status(200).json("Hello");
+    return res.status(200).json('Hello');
     // try {
     //   return res.status(200).json(req?.session?.user?.role);
     // } catch (error) {
