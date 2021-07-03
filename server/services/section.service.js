@@ -56,24 +56,15 @@ class SectionService {
     return newSection;
   }
 
-  // static async updatePassword({ username, password }) {
-  //   const saltLength = Number(process.env.SALT_LENGTH);
-  //   const userToUpdate = await database.user.findOne({
-  //     where: { username }
-  //   });
-
-  //   if (userToUpdate) {
-  //     const salt = genRandomString(saltLength);
-  //     await database.user.update(
-  //       { password: getSha256(password, salt), salt },
-  //       { where: { username } }
-  //     );
-  //     return {
-  //       username: userToUpdate.username,
-  //     };
-  //   }
-  //   return null;
-  // }
+  static async updateSection(section) {
+    const updatedSeqObj = await database.section.update(
+      section,
+      { where: { shortHand: section.shortHand } }
+    );
+    if (!updatedSeqObj[0])
+      return null;
+    return section;
+  }
 
   // static async deleteUser({ username }) {
   //   const userToDelete = await database.user.findOne({ where: { username } });

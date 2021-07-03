@@ -12,10 +12,7 @@ class EntryService {
     } else {
       entries = await database.entry.findAll();
     }
-
-    return entries.map(entry => entry.get()).map(({ id, ...entry }) => ({
-      entry
-    }));
+    return entries.map(entry => entry.get()).map(({ id, ...entry }) => entry);
   }
 
   static async getEntryDetails({ transactionId }) {
@@ -33,24 +30,15 @@ class EntryService {
     return newEntry;
   }
 
-  // static async updatePassword({ username, password }) {
-  //   const saltLength = Number(process.env.SALT_LENGTH);
-  //   const userToUpdate = await database.user.findOne({
-  //     where: { username }
-  //   });
-
-  //   if (userToUpdate) {
-  //     const salt = genRandomString(saltLength);
-  //     await database.user.update(
-  //       { password: getSha256(password, salt), salt },
-  //       { where: { username } }
-  //     );
-  //     return {
-  //       username: userToUpdate.username,
-  //     };
-  //   }
-  //   return null;
-  // }
+  static async updateEntry(entry) {
+    const updatedSeqObj = await database.entry.update(
+      entry,
+      { where: { transactionId: entry.transactionId } }
+    );
+    if (!updatedSeqObj[0])
+      return null;
+    return entry;
+  }
 
   // static async deleteUser({ username }) {
   //   const userToDelete = await database.user.findOne({ where: { username } });

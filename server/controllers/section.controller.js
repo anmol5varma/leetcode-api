@@ -22,19 +22,14 @@ class SectionController {
     return res.status(201).json(createdSection);
   }
 
-  // static async updatePassword(req, res) {
-  //   const data = req.body;
-  //   try {
-  //     const updateUser = await SectionService.updatePassword(data);
-  //     if (!updateUser) {
-  //       return res.status(400).json('Bad request');
-  //     }
-  //     return res.status(200).json(updateUser);
-  //   } catch (error) {
-  //     console.error(`${req.id} - ${error}`);
-  //     return res.status(500).json('Unexpected error');
-  //   }
-  // }
+  static async updateSection(req, res) {
+    const section = req.body;
+    const updatedSection = await SectionService.updateSection(section);
+    if (!updatedSection) {
+      return res.status(400).json('Bad request');
+    }
+    return res.status(200).json(updatedSection);
+  }
 
   // static async deleteUser(req, res) {
   //   const data = req.body;

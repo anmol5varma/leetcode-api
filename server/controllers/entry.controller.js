@@ -18,6 +18,15 @@ class EntryController {
     return res.status(201).json(createdEntry);
   }
 
+  static async updateEntry(req, res) {
+    const entry = req.body;
+    const updatedEntry = await SectionService.updateEntry(entry);
+    if (!updatedEntry) {
+      return res.status(400).json('Bad request');
+    }
+    return res.status(200).json(updatedEntry);
+  }
+
   // static async updatePassword(req, res) {
   //   const data = req.body;
   //   try {
