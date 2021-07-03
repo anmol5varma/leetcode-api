@@ -5,13 +5,14 @@ class SectionController {
     const sections = await SectionService.getAllSections();
     return res.status(200).json(sections);
   }
+
   static async getSectionList(req, res) {
     const sections = await SectionService.getSectionList();
     return res.status(200).json(sections);
   }
 
   static async getSectionDetails(req, res) {
-    const { shortHand } = req.params
+    const { shortHand } = req.params;
     const section = await SectionService.getSectionDetails({ shortHand });
     return res.status(200).json(section);
   }
