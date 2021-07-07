@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import uuid from 'node-uuid';
 import config from 'dotenv';
+import cors from 'cors';
 import { DEFAULT_PORT } from './constants/config';
 import { USER_URL, SECTION_URL, ENTRY_URL } from './constants/route';
 import routes from './routes';
@@ -13,6 +14,8 @@ morgan.token('id', (req) => {
 });
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({

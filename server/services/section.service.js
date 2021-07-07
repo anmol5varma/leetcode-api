@@ -6,7 +6,7 @@ config.config();
 class SectionService {
   static async getAllSections() {
     const sections = await database.section.findAll({ include: ['entries'] });
-    return sections.map(section => section.get()).map(({ id, entries, ...section }) => ({
+    return sections.map((section) => section.get()).map(({ id, entries, ...section }) => ({
       ...section,
       totalInvestment: entries.reduce((sum, entry) => sum + entry.totalCost, 0)
     }));
@@ -14,7 +14,7 @@ class SectionService {
 
   static async getSectionList() {
     const sections = await database.section.findAll();
-    return sections.map(section => section.get()).map(({ name, shortHand }) => ({
+    return sections.map((section) => section.get()).map(({ name, shortHand }) => ({
       name,
       shortHand
     }));
@@ -22,21 +22,28 @@ class SectionService {
 
   static async getSectionDetails({ shortHand }) {
     const section = await database.section.findByPk(shortHand, { include: ['entries'] });
-    if (section === null)
-      return null
+    if (section === null) { return null; }
     const entries = section?.get().entries?.map((entry) => entry.get());
 
     const differentTypes = entries?.reduce((groupCount, entry) => {
-      const newGroupCount = { ...groupCount }
+      const newGroupCount = { ...groupCount };
       if (newGroupCount[entry.name]) {
-        newGroupCount[entry.name] += entry.quantity
+        newGroupCount[entry.name].quantity += entry.quantity;
+        newGroupCount[entry.name].cost += entry.totalCost;
       } else {
-        newGroupCount[entry.name] = entry.quantity
+        newGroupCount[entry.name] = {
+          name: entry.name,
+          code: entry.code,
+          quantity: entry.quantity,
+          cost: entry.totalCost
+        };
       }
-      return newGroupCount
-    }, {})
+      return newGroupCount;
+    }, {});
 
-    const totalInvestment = entries.reduce((sum, entry) => sum + entry.totalCost, 0)
+    const totalInvestment = entries.reduce((sum, entry) => sum + entry.totalCost, 0);
+
+    // entries.sort((a, b) => a.updatedAt - b.updatedAt);
 
     return {
       name: section.name,
@@ -45,9 +52,9 @@ class SectionService {
       createdAt: section.createdAt,
       updatedAt: section.updatedAt,
       totalInvestment,
-      types: differentTypes,
-      entries: entries,
-    }
+      types: Object.values(differentTypes),
+      entries,
+    };
   }
 
   static async addSection(section) {
@@ -61,8 +68,7 @@ class SectionService {
       section,
       { where: { shortHand: section.shortHand } }
     );
-    if (!updatedSeqObj[0])
-      return null;
+    if (!updatedSeqObj[0]) { return null; }
     return section;
   }
 

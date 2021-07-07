@@ -19,12 +19,12 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       quantity: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       totalCost: {
         type: Sequelize.FLOAT
       },
-      sectionShortHand:{
+      sectionShortHand: {
         type: Sequelize.STRING,
         allowNull: false,
         references: {
@@ -42,7 +42,7 @@ module.exports = {
       }
     });
   },
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface) => {
     await queryInterface.dropTable('entries');
   }
 };
