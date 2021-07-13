@@ -1,5 +1,6 @@
 import config from 'dotenv';
 import database from '../models';
+import { estimateMarketValue } from '../utils/marketEstimation';
 
 config.config();
 
@@ -23,15 +24,15 @@ class SectionService {
   static async getSectionDetails({ shortHand }) {
     const section = await database.section.findByPk(shortHand, { include: ['entries'] });
     if (section === null) { return null; }
-    const entries = section?.get().entries?.map((entry) => entry.get());
+    let entries = section.get().entries?.map((entry) => entry.get());
 
     const differentTypes = entries?.reduce((groupCount, entry) => {
       const newGroupCount = { ...groupCount };
-      if (newGroupCount[entry.name]) {
-        newGroupCount[entry.name].quantity += entry.quantity;
-        newGroupCount[entry.name].cost += entry.totalCost;
+      if (newGroupCount[entry.code]) {
+        newGroupCount[entry.code].quantity += entry.quantity;
+        newGroupCount[entry.code].cost += entry.totalCost;
       } else {
-        newGroupCount[entry.name] = {
+        newGroupCount[entry.code] = {
           name: entry.name,
           code: entry.code,
           quantity: entry.quantity,
@@ -43,7 +44,9 @@ class SectionService {
 
     const totalInvestment = entries.reduce((sum, entry) => sum + entry.totalCost, 0);
 
-    // entries.sort((a, b) => a.updatedAt - b.updatedAt);
+    const types = await estimateMarketValue(shortHand, Object.values(differentTypes));
+
+    entries = entries.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 10);
 
     return {
       name: section.name,
@@ -52,7 +55,7 @@ class SectionService {
       createdAt: section.createdAt,
       updatedAt: section.updatedAt,
       totalInvestment,
-      types: Object.values(differentTypes),
+      types,
       entries,
     };
   }
