@@ -1,16 +1,35 @@
 import config from 'dotenv';
 import database from '../models';
-import { estimateMarketValue } from '../utils/marketEstimation';
+import estimateMarketValue from '../utils/marketEstimation';
+import { entryTypes } from '../utils/section.util';
 
 config.config();
 
 class SectionService {
   static async getAllSections() {
     const sections = await database.section.findAll({ include: ['entries'] });
-    return sections.map((section) => section.get()).map(({ id, entries, ...section }) => ({
-      ...section,
-      totalInvestment: entries.reduce((sum, entry) => sum + entry.totalCost, 0)
-    }));
+    return Promise.all(
+      sections.map((section) => section.get()).map(async ({ id, entries, ...section }) => {
+        const differentTypes = entryTypes(entries);
+        const typeDetails = await estimateMarketValue(
+          section.shortHand, Object.values(differentTypes)
+        );
+        const data = typeDetails.reduce((acc, curr) => {
+          const newAcc = { ...acc };
+          newAcc.totalInvestment += curr.cost;
+          newAcc.marketValue += curr.value;
+          return newAcc;
+        }, {
+          totalInvestment: 0,
+          marketValue: 0
+        });
+
+        return {
+          ...section,
+          ...data
+        };
+      })
+    );
   }
 
   static async getSectionList() {
@@ -26,21 +45,7 @@ class SectionService {
     if (section === null) { return null; }
     let entries = section.get().entries?.map((entry) => entry.get());
 
-    const differentTypes = entries?.reduce((groupCount, entry) => {
-      const newGroupCount = { ...groupCount };
-      if (newGroupCount[entry.code]) {
-        newGroupCount[entry.code].quantity += entry.quantity;
-        newGroupCount[entry.code].cost += entry.totalCost;
-      } else {
-        newGroupCount[entry.code] = {
-          name: entry.name,
-          code: entry.code,
-          quantity: entry.quantity,
-          cost: entry.totalCost
-        };
-      }
-      return newGroupCount;
-    }, {});
+    const differentTypes = entryTypes(entries);
 
     const totalInvestment = entries.reduce((sum, entry) => sum + entry.totalCost, 0);
 
