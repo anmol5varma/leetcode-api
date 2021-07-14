@@ -8,28 +8,14 @@ config.config();
 class SectionService {
   static async getAllSections() {
     const sections = await database.section.findAll({ include: ['entries'] });
-    return Promise.all(
-      sections.map((section) => section.get()).map(async ({ id, entries, ...section }) => {
+    return sections.map((section) => section.get())
+      .map(({ id, entries, ...section }) => {
         const differentTypes = entryTypes(entries);
-        const typeDetails = await estimateMarketValue(
-          section.shortHand, Object.values(differentTypes)
-        );
-        const data = typeDetails.reduce((acc, curr) => {
-          const newAcc = { ...acc };
-          newAcc.totalInvestment += curr.cost;
-          newAcc.marketValue += curr.value;
-          return newAcc;
-        }, {
-          totalInvestment: 0,
-          marketValue: 0
-        });
-
         return {
           ...section,
-          ...data
+          types: Object.values(differentTypes)
         };
-      })
-    );
+      });
   }
 
   static async getSectionList() {
@@ -53,7 +39,7 @@ class SectionService {
 
     const totalInvestment = entries.reduce((sum, entry) => sum + entry.totalCost, 0);
 
-    const types = await estimateMarketValue(shortHand, Object.values(differentTypes));
+    const types = Object.values(differentTypes);
 
     entries = entries.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 10);
 
@@ -75,6 +61,25 @@ class SectionService {
     return newSection;
   }
 
+  static async getMarketData({ shortHand }) {
+    if (shortHand) {
+      const section = await database.section.findByPk(shortHand, { include: ['entries'] });
+      if (section === null) { return null; }
+      const entries = section.get().entries?.map((entry) => entry.get());
+      const differentTypes = entryTypes(entries);
+      return estimateMarketValue(shortHand, Object.values(differentTypes));
+    }
+    const sections = await database.section.findAll({ include: ['entries'] });
+    const sectionWiseMarket = await Promise.all(
+      sections.map((section) => section.get())
+        .map(({ shortHand: sectionHand, entries }) => {
+          const differentTypes = entryTypes(entries);
+          return estimateMarketValue(sectionHand, Object.values(differentTypes));
+        })
+    );
+    return sectionWiseMarket.reduce((acc, curr) => ({ ...acc, ...curr }), {});
+  }
+
   static async updateSection(section) {
     const updatedSeqObj = await database.section.update(
       section,
@@ -83,18 +88,6 @@ class SectionService {
     if (!updatedSeqObj[0]) { return null; }
     return section;
   }
-
-  // static async deleteUser({ username }) {
-  //   const userToDelete = await database.user.findOne({ where: { username } });
-
-  //   if (userToDelete) {
-  //     const deletedBook = await database.user.destroy({
-  //       where: { username }
-  //     });
-  //     return deletedBook;
-  //   }
-  //   return null;
-  // }
 }
 
 export default SectionService;

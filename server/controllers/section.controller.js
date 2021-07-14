@@ -32,6 +32,11 @@ class SectionController {
     return res.status(200).json(updatedSection);
   }
 
+  static async getMarketData(req, res) {
+    const marketData = await SectionService.getMarketData(req.query);
+    return res.status(200).json(marketData);
+  }
+
   // static async deleteUser(req, res) {
   //   const data = req.body;
   //   try {
