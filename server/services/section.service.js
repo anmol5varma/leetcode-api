@@ -33,11 +33,15 @@ class SectionService {
   }
 
   static async getSectionList() {
-    const sections = await database.section.findAll();
-    return sections.map((section) => section.get()).map(({ name, shortHand }) => ({
-      name,
-      shortHand
-    }));
+    const sections = await database.section.findAll({ include: ['entries'] });
+    return sections.map((section) => section.get()).map(({ name, shortHand, entries }) => {
+      const type = entryTypes(entries);
+      return {
+        name,
+        shortHand,
+        types: Object.keys(type)
+      };
+    });
   }
 
   static async getSectionDetails({ shortHand }) {

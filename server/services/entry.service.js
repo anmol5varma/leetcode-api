@@ -8,23 +8,28 @@ class EntryService {
   static async getEntries(query) {
     let entries;
     if (query) {
-      entries = await database.entry.findAll({ where: query });
+      entries = await database.entry.findAll({
+        where: query,
+        order: [
+          ['updatedAt', 'DESC']]
+      });
     } else {
       entries = await database.entry.findAll();
     }
-    return entries.map(entry => entry.get()).map(({ id, ...entry }) => entry);
+    return entries.map((entry) => entry.get()).map(({ id, ...entry }) => entry);
   }
 
   static async getEntryDetails({ transactionId }) {
     const entry = await database.entry.findOne({ where: { transactionId }, include: 'section' });
-    if (entry === null)
-      return null;
+    if (entry === null) { return null; }
     const { id, ...result } = entry.get();
     return result;
   }
 
   static async addEntry(entry) {
-    const transactionId = await generateUniqueTransactionId({ shortHand: entry.sectionShortHand, models: database })
+    const transactionId = await generateUniqueTransactionId(
+      { shortHand: entry.sectionShortHand, models: database }
+    );
     const newSeqEntry = await database.entry.create({ ...entry, transactionId });
     const { id, ...newEntry } = newSeqEntry.get();
     return newEntry;
@@ -35,8 +40,7 @@ class EntryService {
       entry,
       { where: { transactionId: entry.transactionId } }
     );
-    if (!updatedSeqObj[0])
-      return null;
+    if (!updatedSeqObj[0]) { return null; }
     return entry;
   }
 
