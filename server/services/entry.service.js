@@ -1,4 +1,5 @@
 import config from 'dotenv';
+import { Op } from 'sequelize';
 import database from '../models';
 import { generateUniqueTransactionId } from '../utils/db.utils';
 
@@ -8,8 +9,12 @@ class EntryService {
   static async getEntries(query) {
     let entries;
     if (query) {
+      const { type, ...tempQuery } = query;
+      if (!!type || ['buy', 'sell'].includes(type)) {
+        tempQuery.quantity = query.type === 'buy' ? { [Op.gt]: 0 } : { [Op.lt]: 0 };
+      }
       entries = await database.entry.findAll({
-        where: query,
+        where: tempQuery,
         order: [
           ['updatedAt', 'DESC']]
       });
@@ -35,6 +40,20 @@ class EntryService {
     return newEntry;
   }
 
+  static async bulkUpload(list) {
+    let idList = [];
+    const listWithId = await Promise.all(list.map(async (e) => {
+      const transactionId = await generateUniqueTransactionId(
+        { shortHand: e.sectionShortHand, models: database },
+        idList
+      );
+      idList = idList.concat(transactionId);
+      return { ...e, transactionId };
+    }));
+    const newSeqEntry = await database.entry.bulkCreate(listWithId, { returning: true });
+    return newSeqEntry.map(({ id, ...newEntry }) => newEntry);
+  }
+
   static async updateEntry(entry) {
     const updatedSeqObj = await database.entry.update(
       entry,
@@ -42,6 +61,14 @@ class EntryService {
     );
     if (!updatedSeqObj[0]) { return null; }
     return entry;
+  }
+
+  static async deleteEntry(transactionId) {
+    const noOfEntriesDeleted = await database.entry.destroy(
+      { where: { transactionId } }
+    );
+    if (noOfEntriesDeleted === 0) { return null; }
+    return transactionId;
   }
 
   // static async deleteUser({ username }) {

@@ -40,6 +40,7 @@ class SectionService {
     const totalInvestment = entries.reduce((sum, entry) => sum + entry.totalCost, 0);
 
     const types = Object.values(differentTypes);
+    types.sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1));
 
     entries = entries.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 10);
 

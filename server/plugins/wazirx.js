@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios, { safeApiCall } from '../utils/api.util';
 import { WAZIRX_MARKET_VALUE } from '../constants/plugin';
 
 const getWazirxMarketValue = async () => {
-  const res = await axios.get(WAZIRX_MARKET_VALUE);
+  const res = await safeApiCall(() => axios.get(WAZIRX_MARKET_VALUE));
   if (res.status > 200) { return null; }
   return res.data;
 };

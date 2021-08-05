@@ -1,6 +1,8 @@
 import wazirx from '../plugins/wazirx';
 import nse from '../plugins/nse';
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 const estimateMarketValue = async (shortHand, types) => {
   let mappedValue;
   switch (shortHand) {
@@ -22,34 +24,5 @@ const estimateMarketValue = async (shortHand, types) => {
   }
   return mappedValue;
 };
-// const estimateMarketValue = async (shortHand, types) => {
-//   let response;
-//   switch (shortHand) {
-//     case 'CPT': {
-//       const mappedValue = await wazirx.getMarketValue();
-//       response = types.map((currency) => {
-//         return {
-//           ...currency,
-//           value: parseFloat(mappedValue[currency.code]) * parseFloat(currency.quantity)
-//         };
-//       });
-//     }
-//       break;
-//     case 'STK': {
-//       const mappedValue = await nse.getMarketValue(types);
-//       console.log(mappedValue);
-//       response = types.map((currency) => {
-//         return {
-//           ...currency,
-//           value: parseFloat(mappedValue[currency.code]) * parseFloat(currency.quantity)
-//         };
-//       });
-//     }
-//       break;
-//     default:
-//       response = types;
-//   }
-//   return response;
-// };
 
 export default estimateMarketValue;

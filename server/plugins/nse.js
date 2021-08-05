@@ -1,10 +1,11 @@
-import { NseIndia } from 'stock-nse-india';
+import NseIndia from './nseIndia';
+import { safeApiCall } from '../utils/api.util';
 
 const nseIndia = new NseIndia();
 
 const getDataForAllStocks = (type) => {
   return type.map(async ({ code }) => {
-    const stockData = await nseIndia.getEquityDetails(code);
+    const stockData = await safeApiCall(() => nseIndia.getEquityDetails(code));
     return {
       code,
       value: stockData.priceInfo.lastPrice

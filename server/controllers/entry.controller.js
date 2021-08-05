@@ -7,7 +7,7 @@ class EntryController {
   }
 
   static async getEntryDetails(req, res) {
-    const { transactionId } = req.params
+    const { transactionId } = req.params;
     const entry = await EntryService.getEntryDetails({ transactionId });
     return res.status(200).json(entry);
   }
@@ -18,13 +18,28 @@ class EntryController {
     return res.status(201).json(createdEntry);
   }
 
+  static async bulkUpload(req, res) {
+    const list = req.body;
+    const uploadedEntries = await EntryService.bulkUpload(list);
+    return res.status(201).json(uploadedEntries);
+  }
+
   static async updateEntry(req, res) {
     const entry = req.body;
-    const updatedEntry = await SectionService.updateEntry(entry);
+    const updatedEntry = await EntryService.updateEntry(entry);
     if (!updatedEntry) {
       return res.status(400).json('Bad request');
     }
     return res.status(200).json(updatedEntry);
+  }
+
+  static async deleteEntry(req, res) {
+    const { transactionId } = req.params;
+    const updatedEntry = await EntryService.deleteEntry(transactionId);
+    if (!updatedEntry) {
+      return res.status(400).json('Bad request');
+    }
+    return res.status(200).json({ transactionId });
   }
 
   // static async updatePassword(req, res) {
