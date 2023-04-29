@@ -4,7 +4,7 @@ import uuid from 'node-uuid';
 import config from 'dotenv';
 import cors from 'cors';
 import { DEFAULT_PORT } from './constants/config';
-import { USER_URL, SECTION_URL, ENTRY_URL } from './constants/route';
+import { QUESTIONS_URL } from './constants/route';
 import routes from './routes';
 import errorHandler from './middleware/errorHandler';
 
@@ -30,15 +30,16 @@ app.use(morgan('tiny'));
 
 const port = process.env.PORT || DEFAULT_PORT;
 
-app.use(USER_URL, routes.user);
-app.use(SECTION_URL, routes.section);
-app.use(ENTRY_URL, routes.entry);
+app.use(QUESTIONS_URL, routes.questions);
 
 app.use(errorHandler);
 
-app.get('/ping', (req, res) => res.status(200).send({
-  message: 'pong'
-}));
+app.get('/ping', (req, res) => {
+  console.log(`${req.id}`);
+  res.status(200).send({
+    message: 'pong'
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on PORT ${port}`);

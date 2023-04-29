@@ -1,3 +1,2 @@
-export const USER_URL = '/api/v1/user';
-export const SECTION_URL = '/api/v1/section';
-export const ENTRY_URL = '/api/v1/entry';
+// eslint-disable-next-line import/prefer-default-export
+export const QUESTIONS_URL = '/api/v1/questions';
