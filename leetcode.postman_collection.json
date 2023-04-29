@@ -1,0 +1,94 @@
+{
+	"info": {
+		"_postman_id": "1463cf1d-146d-4582-80c7-5ac42da4e719",
+		"name": "leetcode",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6503164"
+	},
+	"item": [
+		{
+			"name": "Get questions from filter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/v1/questions?companies=google,amazon&difficulty=easy,medium&page=29&limit=20",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"questions"
+					],
+					"query": [
+						{
+							"key": "companies",
+							"value": "google,amazon"
+						},
+						{
+							"key": "difficulty",
+							"value": "easy,medium"
+						},
+						{
+							"key": "page",
+							"value": "29"
+						},
+						{
+							"key": "limit",
+							"value": "20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all questions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/v1/questions/all",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"questions",
+						"all"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "localhost:9000",
+			"type": "string"
+		}
+	]
+}
