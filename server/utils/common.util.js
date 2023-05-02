@@ -11,7 +11,16 @@ export const getFilteredData = ({ difficulty, companies }, data) => {
     const difficultyList = difficulty?.toLowerCase()?.split(',') ?? [];
     const companyList = companies?.toLowerCase()?.split(',') ?? [];
 
-    if (!difficultyList.includes(question.difficulty.toLowerCase())) { return acc; }
+    if (difficultyList.length > 0 && !difficultyList.includes(question.difficulty.toLowerCase())) {
+      return acc;
+    }
+
+    if (companyList.length === 0) {
+      return acc.concat({
+        ...question,
+        companies: question.companies
+      });
+    }
 
     const containsCompany = question
       .companies.filter((company) => companyList.includes(company.company_name.toLowerCase()));

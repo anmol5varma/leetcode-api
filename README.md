@@ -2,7 +2,7 @@
 
 This repository contains code to expose an API to retrieve Leetcode questions based on company tags and difficulty levels.
 
-The API will be available at `http://localhost:5000`.
+The API will be available at `https://github.com/anmol5varma/leetcode-api`.
 
 ## Endpoints
 
@@ -50,10 +50,10 @@ None
 ### Get Questions by Difficulty
 
 ```
-GET /questions/difficulty/<difficulty>
+GET /api/v1/questions
 ```
 
-Returns a list of questions that are tagged with the given `difficulty`.
+Returns a list of questions that are tagged with the given `difficulty` list and the given `company` list.
 
 #### Request Parameters
 
@@ -76,10 +76,8 @@ Returns a list of questions that are tagged with the given `difficulty`.
     "data": []
 }
 ```
-
-## Contributing
-
-Contributions are always welcome! Please see the [contribution guidelines](CONTRIBUTING.md) to get started.
+## Code References
+Special thanks to Huan Xu for this [leetcode-company-wise-problems-2022](https://github.com/hxu296/leetcode-company-wise-problems-2022/blob/main/data/leetcode_problems_and_companies.csv) csv file helps our server fetch information about which companies have asked the problem.
 
 ## License
 
