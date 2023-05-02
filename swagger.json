@@ -8,8 +8,8 @@
     "host": "https://anmol5varma-leetcode-api.glitch.me/",
     "basePath": "/",
     "schemes": [
-        "http",
-        "https"
+        "https",
+        "http"
     ],
     "paths": {
         "/api/v1/questions/all": {
