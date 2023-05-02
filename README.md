@@ -2,7 +2,7 @@
 
 This repository contains code to expose an API to retrieve Leetcode questions based on company tags and difficulty levels.
 
-The API will be available at `https://github.com/anmol5varma/leetcode-api`.
+The APIs will be available at `https://anmol5varma-leetcode-api.glitch.me/`.
 
 ## Endpoints
 
@@ -11,6 +11,7 @@ The API will be available at `https://github.com/anmol5varma/leetcode-api`.
 ```
 GET /api/v1/questions/all
 ```
+`curl --location 'https://anmol5varma-leetcode-api.glitch.me/api/v1/questions/all'`
 
 Returns a list of all questions.
 
@@ -52,6 +53,7 @@ None
 ```
 GET /api/v1/questions
 ```
+`curl --location 'https://anmol5varma-leetcode-api.glitch.me/api/v1/questions?difficulty=medium&page=1&limit=20'`
 
 Returns a list of questions that are tagged with the given `difficulty` list and the given `company` list.
 
