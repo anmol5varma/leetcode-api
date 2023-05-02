@@ -16,9 +16,4 @@ COPY . .
 
 EXPOSE 8080
 
-# RUN npx sequelize-cli db:migrate:undo:all
-# RUN npx sequelize-cli db:migrate
-
-# RUN npx sequelize-cli db:seed:all
-
 CMD [ "npm", "start" ]
